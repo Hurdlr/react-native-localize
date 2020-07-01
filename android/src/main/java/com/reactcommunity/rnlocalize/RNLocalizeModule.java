@@ -79,7 +79,7 @@ public class RNLocalizeModule extends ReactContextBaseJavaModule implements Life
   @Override
   public void onCatalystInstanceDestroy() {
     if (receiver != null) {
-      reactContext.unregisterReceiver(receiver);
+      getReactApplicationContext().unregisterReceiver(receiver);
     }
   }
 
