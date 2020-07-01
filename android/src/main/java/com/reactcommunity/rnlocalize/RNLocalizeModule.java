@@ -51,6 +51,8 @@ public class RNLocalizeModule extends ReactContextBaseJavaModule implements Life
   private boolean mainActivityVisible = true;
   private boolean emitChangeOnResume = false;
 
+  private BroadcastReceiver receiver;
+
   public RNLocalizeModule(ReactApplicationContext reactContext) {
     super(reactContext);
 
@@ -61,7 +63,7 @@ public class RNLocalizeModule extends ReactContextBaseJavaModule implements Life
     filter.addAction(Intent.ACTION_TIME_CHANGED);
     filter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
 
-    BroadcastReceiver receiver = new BroadcastReceiver() {
+    receiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
         if (intent.getAction() != null) {
@@ -72,6 +74,13 @@ public class RNLocalizeModule extends ReactContextBaseJavaModule implements Life
 
     reactContext.addLifecycleEventListener(this);
     reactContext.registerReceiver(receiver, filter);
+  }
+
+  @Override
+  public void onCatalystInstanceDestroy() {
+    if (receiver != null) {
+      reactContext.unregisterReceiver(receiver);
+    }
   }
 
   @Override
